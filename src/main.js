@@ -31,13 +31,15 @@ app.get(`/`, (req, res) =>{
     
 })
 
-app.get("/api/trazerresposta", (req,res)=>{
-    res.json(
-        {resposta: "fala rapaziada essa aqui é a resposta do json",
-         resposta2: "esse menino é tchola"
-        }
-    )
+app.get("/register", (req,res) =>{
+
+    res.sendFile(
+        path.join(process.cwd(), "public", "register.html")
+    );
 })
+
+
+
 
 // abrindo o primeiro listen para teste
 app.listen(PORT, () =>{
