@@ -8,16 +8,16 @@
 </head>
 <body>
     <div class="conteiner">
-        <form action="/register/infos" method="POST">
+        <form action="/register" method="POST">
             <h2>Entrar</h2>
         
             <div>
-                <label for="email">E-mail</label>
+                <label for="Username">Username</label>
                 <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    placeholder="exemplo@email.com" 
+                    type="text" 
+                    id="Username" 
+                    name="Username" 
+                    placeholder="Pedro Lucas" 
                     required
                 >
             </div>
@@ -33,13 +33,12 @@
                     minlength="6"
                 >
             </div>
-
             <button type="submit">Acessar Sistema</button>
-
             <p style="font-size: 0.8rem; text-align: center; margin-top: 1rem;">
-                <a href="#">Esqueceu a senha?</a>
+
             </p>
         </form>
     </div>
 </body>
+<script src="/js/register.js"></script>
 </html>
