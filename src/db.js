@@ -1,7 +1,9 @@
-import "dotenv/config"
+import "dotenv/config";
 // importando pool
-import { Client, Pool } from "pg"
+import { Pool } from "pg";
 import chalk from "chalk";
+// importando ferramenta de hash
+import bcrypt from "bcrypt";
 
 
 const pool = new Pool({
@@ -26,8 +28,6 @@ export async function criandotabela() {
         username character varying(100) COLLATE pg_catalog."default" NOT NULL,
         password character varying(255) COLLATE pg_catalog."default",
         CONSTRAINT userdatas_pkey PRIMARY KEY (id),
-        CONSTRAINT userdatas_username UNIQUE (username),
-        CONSTRAINT userdatas_username_unique UNIQUE (username),
         CONSTRAINT username UNIQUE (username)
     )
 
@@ -45,41 +45,46 @@ export async function criandotabela() {
     
 }
 
-export async function pegarusuario(usuario,senha) {
-
-    // verificando se o usuario existe no SLQ
+export async function register(usuario,senha) {
     try {
-    const res = await query(`
-        SELECT username,password 
-        FROM userdatas
-        WHERE username = $1 and password = $2;`, [usuario,senha])
+    console.log(chalk.magenta("verificando se o usuario digitado já existe no banco"));
+    
+    // verificando se o usuario digitado já existe no banco
+    const userexists =  await query(`SELECT username FROM userdatas WHERE username = $1`, [usuario]);
+        console.log(userexists);
+        
+    
+    // se não encontrar o usuario faz o if de baixo (adicionar)
+    if (userexists.rowCount == 0 ) {
+        console.log(chalk.magenta("adicionando usuarionobanco"));
+        // fazendo o hash
+        const saltRounds  = 10;
+        const senhahash = await bcrypt.hash(senha,saltRounds);
+        
+        // verificando se o usuario existe no SLQ
+        await query(`INSERT INTO userdatas (username, password)
+            VALUES ($1,$2)`,[usuario,senhahash]);   
 
-
-        if (res.rowCount === 1) {
-            // usuario ja encontrado
-            console.log(chalk.magenta("usuario ja cadastrado"));
-            console.log(res.rows);
-            return {status: "Exists"}
-            
-        }else{
-            // cadastrando usuario
-            try {
-                console.log("nao encontrada");
-                const res = await query(`INSERT INTO userdatas ("username","password") values ($1,$2)`,[usuario,senha])
-                console.log(res);
-                console.log("usuario nao indentificado no banco de dados, inserido...");    
-                return {status: "Inserted"}            
-            }                
-            catch {
-                console.log("usuario nao indentificado no banco de dados, mas um erro ocorreu (provavelmente nome ja existente)");
-                return {status: "InvalidName"}  
-            }
-        }
+        return {status: 201, data:{
+            success : true,
+            message : "Usuario cadastrado com sucesso" 
+        }}     
     }
-    catch(erro){
-        console.log(erro);
-        return {status: "Error"}
+    // se encontrar o usuario faz o if de baixo (dar erro)
+    if (userexists.rowCount == 1 ) {
+        console.log(chalk.magenta("usuario já existe no banco, não permitido registrar"));
+        return {status: 409, data:{
+            success: false,
+            message: "O Username já está sendo ultilizado por outro usuario. Escolha outro Username"
+        }}
     }
     
-    
+    }
+    catch (err) {
+        console.log((chalk.redBright(err)));
+        return{status: 500, data:{
+            success: false,
+            message: "Houve um Erro inesperado"
+        }}
+    }
 }

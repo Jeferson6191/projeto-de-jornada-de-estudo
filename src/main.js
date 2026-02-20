@@ -1,7 +1,6 @@
 // importando dedpendencias
 import console from "console"
 import express from "express"
-import fs from "fs"
 import path from "path"
 import "dotenv/config"
 
@@ -39,11 +38,10 @@ app.post("/register", async(req, res) =>{
     console.log(res.body);
     const senha = String(req.body["password"]);
     const usuario = String(req.body["Username"]);
-    const pegarusuario = await db.pegarusuario(usuario,senha)
+    const { status, data } = await db.register(usuario,senha)
 
-    res.json(pegarusuario)
+    res.status(status).json(data)
 
-    
 })
 
 
