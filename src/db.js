@@ -47,6 +47,7 @@ export async function criandotabela() {
 
 export async function register(usuario,senha) {
     try {
+        
     console.log(chalk.magenta("verificando se o usuario digitado já existe no banco"));
     
     // verificando se o usuario digitado já existe no banco

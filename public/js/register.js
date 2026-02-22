@@ -1,11 +1,14 @@
-// pegando ids
+
 
 const usernamevalue = document.querySelector("#Username");
 const passwordvalue = document.querySelector("#password");
 
 document.querySelector("#submitloginbtn").addEventListener("click", async(e) => {
     e.preventDefault();
-    fetch("http://localhost:8000/register",{
+    try {
+        
+    
+    const response = await fetch("/register",{
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -15,20 +18,19 @@ document.querySelector("#submitloginbtn").addEventListener("click", async(e) => 
             password: passwordvalue.value 
         })   
     })
-    .then(res => {
-        if (!res.ok) throw new Error("Erro na requisição");
-        return res.json();
-    })
-    })
-    .then(data => {
-        console.log("Resposta:", data);
-        console.log(String(data));
-        document.querySelector("#feedback").textContent = JSON.stringify(data.message);
-    })
-    .catch(err => {
-        console.error("Erro:", err);
-    });
+
+    const data = await response.json()
+
+    document.querySelector("#feedback").textContent = JSON.stringify(data.message).replaceAll(`"`,"");
 
 
-    console.log(res);
+    if (!response.ok){
+
+        throw new Error("Erro na requisição");
+    }
+    }
+    catch (err) {
+        console.log(`Error${err}`);
+    }
+})
     

@@ -35,12 +35,13 @@ app.get("/register", (req,res) =>{
 })
 
 app.post("/register", async(req, res) =>{
-    console.log(res.body);
+
     const senha = String(req.body["password"]);
     const usuario = String(req.body["Username"]);
     const { status, data } = await db.register(usuario,senha)
-
+    console.log(data);
     res.status(status).json(data)
+    
 
 })
 
