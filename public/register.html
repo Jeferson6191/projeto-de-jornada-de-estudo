@@ -8,10 +8,11 @@
 </head>
 <body>
     <div class="conteiner">
+        <div class="form">
         <form>
             <h2>Registrar-se</h2>
         
-            <div>
+            <div class="conteudos">
                 <label for="Username">Username</label>
                 <input 
                     type="text" 
@@ -20,9 +21,10 @@
                     placeholder="Pedro Lucas" 
                     required
                 >
+                <p class="resposta_nome"></p>
             </div>
 
-            <div>
+            <div class="conteudos">
                 <label for="password">Senha</label>
                 <input 
                     type="password" 
@@ -32,12 +34,13 @@
                     required
                     minlength="6"
                 >
+                <p class="resposta_senha"></p>
             </div>
             <button id="submitloginbtn">Acessar Sistema</button>
             <p id="feedback"></p>
             <p style="font-size: 0.8rem; text-align: center; margin-top: 1rem;">
-
             </p>
+            </div>
         </form>
     </div>
 </body>
